@@ -1,0 +1,22 @@
+# Build output
+build/
+Debug/
+Release/
+
+# CubeIDE metadata
+.settings/
+.project
+.cproject
+*.launch
+
+# Binaries
+*.elf
+*.bin
+*.hex
+*.map
+
+# VS Code
+.vscode/
+
+# Backup files
+*~
