@@ -24,6 +24,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+  #include "power.h"
 
 /* USER CODE END Includes */
 
@@ -94,22 +95,24 @@ int main(void)
   MX_DMA_Init();
   MX_ADC1_Init();
   /* USER CODE BEGIN 2 */
-  HAL_ADCEx_Calibration_Start(&hadc1);
-  HAL_ADC_Start_DMA(&hadc1, (uint32_t*)adc_value,2 ); 
+  setup();
+  //HAL_ADCEx_Calibration_Start(&hadc1);
+  //HAL_ADC_Start_DMA(&hadc1, (uint32_t*)adc_value,2 ); 
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    if(HAL_GetTick() - loop_tick < 1000) {
-      continue;
-    }
-    else {
-      HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
-      loop_tick = HAL_GetTick();
-    }
+    // if(HAL_GetTick() - loop_tick < 1000) {
+    //   continue;
+    // }
+    // else {
+    //   HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
+    //   loop_tick = HAL_GetTick();
+    // }
     //HAL_Delay(10);
+    loop();
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

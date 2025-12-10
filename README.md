@@ -1,8 +1,7 @@
 # bluepill_power_monitoring
 
-Converting the STM32 Project from C to C++ (Using CMake)
+Converting the STM32 Project from C to C++ (Using CMake Only)
 
-These are the steps needed to add C++ support to an STM32CubeMX C project without touching Makefiles:
 
 1. Add Your C++ Source File
 
@@ -17,6 +16,7 @@ Ensure the top-level CMakeLists.txt contains:
 
 enable_language(C CXX ASM)
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 3. Add the C++ File to the Build
 
