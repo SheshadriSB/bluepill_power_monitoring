@@ -45,6 +45,7 @@ add_subdirectory(cmake/stm32cubemx)
 # Add sources to executable
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     Core/Src/power.cpp
+    Core/Src/easy_crc.c
 )
 # Add include paths
 target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE

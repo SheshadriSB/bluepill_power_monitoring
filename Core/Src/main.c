@@ -20,11 +20,15 @@
 #include "main.h"
 #include "adc.h"
 #include "dma.h"
+#include "usart.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
   #include "power.h"
+  #include "easy_crc.h"
+  #include "usart.h"
+
 
 /* USER CODE END Includes */
 
@@ -46,7 +50,7 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-  uint16_t adc_value[2];
+  uint16_t adc_value[3];
   uint32_t loop_tick = 0;
 /* USER CODE END PV */
 
@@ -94,6 +98,7 @@ int main(void)
   MX_GPIO_Init();
   MX_DMA_Init();
   MX_ADC1_Init();
+  MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
   setup();
   //HAL_ADCEx_Calibration_Start(&hadc1);
