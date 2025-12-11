@@ -9,6 +9,9 @@
 #define PAYLOAD_SIZE    30
 #define START_BYTE      0xA5
 
+// ensure C linkage for the flag so C code can see it
+extern "C" volatile uint8_t uart1_tx_done = 1; // 1 = ready at startup
+
 static uint8_t payload_buf[PAYLOAD_SIZE];
 static uint8_t payload_index = 0;
 
@@ -85,11 +88,11 @@ void push_adc_values()
 
 void send_packet()
 {
-    // If previous DMA transfer not finished, skip
-    // if (!uart1_tx_done)
-    //     return;
+    //If previous DMA transfer not finished, skip
+    if (!uart1_tx_done)
+        return;
 
-    // uart1_tx_done = 0;  // Mark DMA busy
+    uart1_tx_done = 0;  // Mark DMA busy
 
     p.start = START_BYTE;
 

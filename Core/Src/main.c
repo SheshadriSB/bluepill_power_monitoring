@@ -176,6 +176,12 @@ void SystemClock_Config(void)
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc) {
 
 }
+void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
+{
+    if (huart->Instance == USART1) {
+        uart1_tx_done = 1; // mark DMA done
+    }
+}
 
 /* USER CODE END 4 */
 

@@ -1,16 +1,21 @@
-#ifndef __APP_H
-#define __APP_H
+#ifndef POWER_H
+#define POWER_H
+
+#include <stdint.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-void setup();
+// flag used by UART Tx complete callback
+extern volatile uint8_t uart1_tx_done;
 
-void loop();
+// your existing prototypes (if any)
+void setup(void);
+void loop(void);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif // __APP_H
+#endif // POWER_H
