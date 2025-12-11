@@ -122,7 +122,7 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
   }
-
+  volatile uint8_t uart1_tx_done = 1;   // ready at startup
   /* USER CODE END 3 */
 }
 
