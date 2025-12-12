@@ -2,22 +2,33 @@ import serial
 
 START_BYTE = 0xA5
 PACKET_SIZE = 32
+CRC_POLY = 0x07  # CRC-8 polynomial
+
+def crc8(data):
+    """Compute CRC-8 using polynomial 0x07."""
+    crc = 0
+    for byte in data:
+        crc ^= byte
+        for _ in range(8):
+            if crc & 0x80:
+                crc = (crc << 1) ^ CRC_POLY
+            else:
+                crc <<= 1
+            crc &= 0xFF
+    return crc
 
 def find_start(buffer):
-    """Find index of start byte (0xA5) inside buffer."""
     try:
         return buffer.index(START_BYTE)
     except ValueError:
         return -1
 
 def parse_packet(packet):
-    """Convert bytes to hex string + return payload + crc."""
-    hex_string = " ".join(f"{b:02X}" for b in packet)
-    return hex_string
+    return " ".join(f"{b:02X}" for b in packet)
 
 def main():
     ser = serial.Serial(
-        port="/dev/ttyUSB0",      # change as needed (COM3 on Windows)
+        port="/dev/ttyUSB1",
         baudrate=115200,
         timeout=0.1
     )
@@ -27,8 +38,7 @@ def main():
     print("Listening...")
 
     while True:
-        # Read what’s available
-        data = ser.read(64)  # read chunks
+        data = ser.read(64)
         if not data:
             continue
 
@@ -37,31 +47,37 @@ def main():
         while True:
             start = find_start(buffer)
             if start < 0:
-                # No start byte found → keep last few bytes only to avoid infinite growth
                 buffer.clear()
                 break
 
-            # Not enough bytes after start → wait for more
             if len(buffer) - start < PACKET_SIZE:
                 break
 
-            # Extract packet
+            # Extract full packet
             packet = buffer[start:start + PACKET_SIZE]
 
-            # Remove processed portion
+            # Remove processed bytes
             del buffer[:start + PACKET_SIZE]
 
-            # Print packet
-            print("Packet:", parse_packet(packet))
+            print("\nPacket:", parse_packet(packet))
 
-            # Payload & CRC (you can decode your data later)
-            payload = packet[1:-1]
-            crc = packet[-1]
+            # Split fields
+            payload = packet[1:-1]  # exclude start byte and crc
+            recv_crc = packet[-1]
 
             print("Payload:", " ".join(f"{b:02X}" for b in payload))
-            print("CRC:", f"{crc:02X}")
-            print("-----")
+            print("Received CRC:", f"{recv_crc:02X}")
 
+            # ---- CRC CHECK ----
+            calc_crc = crc8(payload)
+            print("Calculated CRC:", f"{calc_crc:02X}")
+
+            if calc_crc == recv_crc:
+                print("CRC OK ✓")
+            else:
+                print("CRC FAIL ✗")
+
+            print("-----")
 
 if __name__ == "__main__":
     main()
