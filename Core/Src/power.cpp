@@ -9,7 +9,7 @@
 #define PAYLOAD_SIZE    30
 #define START_BYTE      0xA5
 
-// ensure C linkage for the flag so C code can see it
+
 extern "C" volatile uint8_t uart1_tx_done = 1; // 1 = ready at startup
 
 static uint8_t payload_buf[PAYLOAD_SIZE];
@@ -88,7 +88,7 @@ void push_adc_values()
 
 void send_packet()
 {
-    //If previous DMA transfer not finished, skip
+    
     if (!uart1_tx_done)
         return;
 
@@ -96,16 +96,16 @@ void send_packet()
 
     p.start = START_BYTE;
 
-    // Copy payload
+    
     for (int i = 0; i < PAYLOAD_SIZE; i++)
         p.payload[i] = payload_buf[i];
 
-    // CRC for payload only
+    
     p.crc = calculate_cr8x_fast(p.payload, PAYLOAD_SIZE);
 
     HAL_UART_Transmit_DMA(&huart1, (uint8_t*)&p, PACKET_SIZE);
 
-    // Reset payload buffer
+    
     memset(payload_buf, 0, PAYLOAD_SIZE);
     payload_index = 0;
 }
@@ -125,7 +125,7 @@ void setup()
 
 void loop()
 {
-    // Every 100 ms: add 6 bytes of ADC data
+    
     if (HAL_GetTick() - loop_tick >= 100)
     {
         HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
@@ -133,7 +133,7 @@ void loop()
 
         push_adc_values();
 
-        // When we reach exactly 30 bytes → send
+        
         if (payload_index >= PAYLOAD_SIZE)
             send_packet();
     }
